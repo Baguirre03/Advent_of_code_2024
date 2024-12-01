@@ -10,9 +10,8 @@ const solve = (input) => {
     .split(/[\n\s]/)
     .filter((x) => x.length)
     .map((x) => +x)
-    .forEach((x) => {
-      cur % 2 ? right.push(x) : left.push(x);
-      cur++;
+    .forEach((x, indx) => {
+      indx % 2 ? right.push(x) : left.push(x);
     });
 
   left.sort((a, b) => a - b);
