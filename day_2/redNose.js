@@ -18,21 +18,14 @@ const solve = (input) => {
       if (Math.abs(arr[j] - arr[j - 1]) > 3) {
         res++;
         break;
+      } else if (decreasing && arr[j] >= marker) {
+        res++;
+        break;
+      } else if (!decreasing && arr[j] <= marker) {
+        res++;
+        break;
       }
-      if (decreasing) {
-        if (arr[j] >= marker) {
-          res++;
-          break;
-        }
-        marker = Math.min(marker, arr[j]);
-      } else {
-        // increasing
-        if (arr[j] <= marker) {
-          res++;
-          break;
-        }
-        marker = Math.max(marker, arr[j]);
-      }
+      marker = decreasing ? Math.min(marker, arr[j]) : Math.max(marker, arr[j]);
     }
   }
   return input.length - res;
