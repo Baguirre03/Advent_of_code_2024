@@ -6,12 +6,7 @@ const solve = (input) => {
   const regex = /mul\(\d+,\d+\)/g;
   let arr = [...input.matchAll(regex)].map((x) => x[0]);
   let res = 0;
-  let doIt = true;
   for (let line of arr) {
-    if (line == "do" || line == "don't") {
-      doIt = line == "do";
-      continue;
-    }
     let curArr = line.split("");
 
     let start = curArr.indexOf("(");
