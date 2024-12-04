@@ -35,13 +35,11 @@ const solve = () => {
       }
     }
   }
-  let final = 0;
-  res.forEach((row) => {
-    row.forEach((x) => {
-      if (x >= 2) final += x - 1;
-    });
+  res.forEach((row, indx) => {
+    res[indx] = row.reduce((acum, x) => (x >= 2 ? acum + x - 1 : acum), 0);
   });
-  return final;
+
+  return res.reduce((acum, cur) => cur + acum, 0);
 };
 
 function dfs(r, c, indx, direction, prev) {
