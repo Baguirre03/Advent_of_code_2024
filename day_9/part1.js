@@ -31,10 +31,10 @@ const solve = (input) => {
     while (arr[front] != ".") front++;
   }
 
-  arr.splice(arr.indexOf("."));
-  let res = 0;
-  arr.forEach((num, indx) => (res += num * indx));
-  return res;
+  return arr
+    .filter((x) => x != ".")
+    .map((num, indx) => num * indx)
+    .reduce((cur, acum) => cur + acum, 0);
 };
-
+6607511583593;
 console.log(solve(fileContent));
