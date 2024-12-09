@@ -48,11 +48,9 @@ const solve = (input) => {
       }
     }
   }
-  let res = 0;
-  arr.forEach((num, i) => {
-    if (num !== ".") res += num * i;
-  });
-  return res;
+  return arr
+    .map((x, indx) => (x != "." ? x * indx : 0))
+    .reduce((cur, acum) => cur + acum, 0);
 };
 
 console.log(solve(fileContent));
