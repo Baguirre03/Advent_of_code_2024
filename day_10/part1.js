@@ -20,36 +20,35 @@ const solve = (matrix) => {
     });
   });
 
-  let res = 0;
   const outOfBounds = (r, c) =>
     r < 0 || c < 0 || r >= matrix.length || c >= matrix[0].length;
 
   const visited = new Set();
   const key = (r, c) => `${r},${c}`;
 
-  function search(r, c, prev, indx) {
+  function search(r, c, prev) {
     let cur = matrix[r][c];
-    if (cur != prev + 1) return;
+    if (cur != prev + 1) return 0;
     if (cur == 9 && !visited.has(key(r, c))) {
       visited.add(key(r, c));
-      res++;
-      return;
+      return 1;
     }
-
+    let score = 0;
     for (let [dx, dy] of directions) {
       if (outOfBounds(r + dx, c + dy)) continue;
-      search(r + dx, c + dy, cur, indx);
+      score += search(r + dx, c + dy, cur);
     }
 
-    return;
+    return score;
   }
 
-  heads.forEach((zero, indx) => {
-    search(zero[0], zero[1], -1, indx);
+  heads.forEach((x, indx) => {
+    heads[indx] = search(x[0], x[1], -1);
     visited.forEach((nine) => visited.delete(nine));
   });
 
-  return res;
+  return heads.reduce((cur, acum) => cur + acum);
 };
+794;
 
 console.log(solve(fileContent));
