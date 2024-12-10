@@ -21,7 +21,7 @@ const solve = (matrix) => {
   });
 
   let res = 0;
-  const outOfBounds = (r, c, key) =>
+  const outOfBounds = (r, c) =>
     r < 0 || c < 0 || r >= matrix.length || c >= matrix[0].length;
 
   const visited = new Set();
