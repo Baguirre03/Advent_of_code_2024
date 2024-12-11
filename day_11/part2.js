@@ -9,38 +9,31 @@ const fileContent = fs.readFileSync(filePath, "utf8").split(" ");
 // olds stone * 2024
 
 const solve = (stones) => {
-  let final = 0;
-  for (let i = 0; i < stones.length; i++) {
-    let tmp = findStone([stones[i]], 1, stones[i]);
-    final += tmp;
-  }
-  return final;
+  return stones.map((x) => dfs(x, 0)).reduce((a, c) => a + c);
 };
 
-let key = (initialVal, step) => `${initialVal}${step}`;
+let key = (curVal, step) => `${curVal},${step}`;
 let mp = new Map();
-const findStone = (stones, indx, initialVal) => {
-  let k = key(initialVal, indx);
-  if (indx == 26) {
-    return stones.length;
+
+const dfs = (num, indx) => {
+  let res = 0;
+
+  if (indx == 75) {
+    return 1;
   }
 
+  let k = key(num, indx);
   if (mp.has(k)) return mp.get(k);
-
-  let tmp = [];
-  for (let i = 0; i < stones.length; i++) {
-    let curStone = stones[i];
-    if (evenDigits(curStone)) {
-      tmp.push(...leftRight(curStone));
-    } else if (curStone == "0") {
-      tmp.push("1");
-    } else {
-      tmp.push((curStone * 2024).toString());
-    }
+  if (evenDigits(num)) {
+    let [left, right] = leftRight(num);
+    res += dfs(left, indx + 1);
+    res += dfs(right, indx + 1);
+  } else if (num == "0") {
+    res += dfs("1", indx + 1);
+  } else {
+    res += dfs((num * 2024).toString(), indx + 1);
   }
-  let count = findStone(tmp, indx + 1, initialVal);
-  mp.set(k, count);
-
+  mp.set(k, res);
   return mp.get(k);
 };
 
