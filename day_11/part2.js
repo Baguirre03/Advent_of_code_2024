@@ -20,7 +20,7 @@ const solve = (stones) => {
 let key = (initialVal, step) => `${initialVal}${step}`;
 let mp = new Map();
 const findStone = (stones, indx, initialVal) => {
-  let k = key(initialVal, 76 - indx);
+  let k = key(initialVal, indx);
   if (indx == 26) {
     return stones.length;
   }
