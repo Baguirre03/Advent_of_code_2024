@@ -17,11 +17,11 @@ const solve = (stones) => {
   return final;
 };
 
-let key = (s, step) => `${s}${step}`;
+let key = (initialVal, step) => `${initialVal}${step}`;
 let mp = new Map();
-const findStone = (stones, indx, start) => {
-  let k = key(start, indx);
-  if (indx == 76) {
+const findStone = (stones, indx, initialVal) => {
+  let k = key(initialVal, 76 - indx);
+  if (indx == 26) {
     return stones.length;
   }
 
@@ -38,7 +38,7 @@ const findStone = (stones, indx, start) => {
       tmp.push((curStone * 2024).toString());
     }
   }
-  let count = findStone(tmp, indx + 1, start);
+  let count = findStone(tmp, indx + 1, initialVal);
   mp.set(k, count);
 
   return mp.get(k);
