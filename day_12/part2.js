@@ -58,6 +58,13 @@ const solve = (input) => {
       d: 0,
     };
 
+    let offsets = {
+      u: ["x", -1],
+      l: ["y", -1],
+      r: ["y", 1],
+      d: ["x", 1],
+    };
+
     const mp = new Map();
     const key = (x, y) => [x, y].toString();
 
@@ -80,37 +87,24 @@ const solve = (input) => {
       let [x, y] = cord;
       // x goes up and down
       // y goes left and right.
-
-      // look up
-      if (outOfBounds(x - 1, y, letter, false)) {
-        addTypeSet(x, y, "u");
-        if (addType(x, y - 1, "u") && addType(x, y + 1, "u")) {
-          dict["u"]++;
+      Object.keys(dict).forEach((dir) => {
+        let [xDif, outNum] = offsets[dir];
+        if (xDif == "x") {
+          if (outOfBounds(x + outNum, y, letter, false)) {
+            addTypeSet(x, y, dir);
+            if (addType(x, y - 1, dir) && addType(x, y + 1, dir)) {
+              dict[dir]++;
+            }
+          }
+        } else {
+          if (outOfBounds(x, y + outNum, letter, false)) {
+            addTypeSet(x, y, dir);
+            if (addType(x + 1, y, dir) && addType(x - 1, y, dir)) {
+              dict[dir]++;
+            }
+          }
         }
-      }
-      // look down
-      if (outOfBounds(x + 1, y, letter, false)) {
-        addTypeSet(x, y, "d");
-        if (addType(x, y - 1, "d") && addType(x, y + 1, "d")) {
-          dict["d"]++;
-        }
-      }
-
-      // look left
-      if (outOfBounds(x, y - 1, letter, false)) {
-        addTypeSet(x, y, "l");
-        if (addType(x + 1, y, "l") && addType(x - 1, y, "l")) {
-          dict["l"]++;
-        }
-      }
-
-      // look right
-      if (outOfBounds(x, y + 1, letter, false)) {
-        addTypeSet(x, y, "r");
-        if (addType(x + 1, y, "r") && addType(x - 1, y, "r")) {
-          dict["r"]++;
-        }
-      }
+      });
     }
 
     return Object.values(dict).reduce((c, a) => a + c);
