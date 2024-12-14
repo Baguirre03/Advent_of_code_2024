@@ -29,7 +29,6 @@ const solve = (input) => {
       if (!visited.has([r, c].toString())) {
         let letter = input[r][c];
         let [area, p] = [search(r, c, letter, 0), findPerimeter(cords, letter)];
-        console.log(letter, "^^", "topsides:", p);
         cords = [];
         res += area * p;
       }
@@ -77,49 +76,41 @@ const solve = (input) => {
     };
 
     for (let cord of cords) {
+      cords.sort((a, b) => (a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]));
       let [x, y] = cord;
-      Object.keys(dict).forEach((direction) => {
-        if (outOfBounds(x - 1, y, letter, false)) {
-          addTypeSet(x, y, direction);
-          if (addType(x, y - 1, direction) && addType(x, y + 1, direction)) {
-            dict[direction]++;
-          }
-        }
-      });
-
       // x goes up and down
       // y goes left and right.
 
       // look up
-      // if (outOfBounds(x - 1, y, letter, false)) {
-      //     addTypeSet(x, y, "u");
-      //     if (addType(x, y - 1, "u") && addType(x, y + 1, "u")) {
-      //       dict["u"]++;
-      //     }
-      //   }
-      //   // look down
-      //   if (outOfBounds(x + 1, y, letter, false)) {
-      //     addTypeSet(x, y, "d");
-      //     if (addType(x, y - 1, "d") && addType(x, y + 1, "d")) {
-      //       dict["d"]++;
-      //     }
-      //   }
+      if (outOfBounds(x - 1, y, letter, false)) {
+        addTypeSet(x, y, "u");
+        if (addType(x, y - 1, "u") && addType(x, y + 1, "u")) {
+          dict["u"]++;
+        }
+      }
+      // look down
+      if (outOfBounds(x + 1, y, letter, false)) {
+        addTypeSet(x, y, "d");
+        if (addType(x, y - 1, "d") && addType(x, y + 1, "d")) {
+          dict["d"]++;
+        }
+      }
 
-      //   // look left
-      //   if (outOfBounds(x, y - 1, letter, false)) {
-      //     addTypeSet(x, y, "l");
-      //     if (addType(x + 1, y, "l") && addType(x - 1, y, "l")) {
-      //       dict["l"]++;
-      //     }
-      //   }
+      // look left
+      if (outOfBounds(x, y - 1, letter, false)) {
+        addTypeSet(x, y, "l");
+        if (addType(x + 1, y, "l") && addType(x - 1, y, "l")) {
+          dict["l"]++;
+        }
+      }
 
-      //   // look right
-      //   if (outOfBounds(x, y + 1, letter, false)) {
-      //     addTypeSet(x, y, "r");
-      //     if (addType(x + 1, y, "r") && addType(x - 1, y, "r")) {
-      //       dict["r"]++;
-      //     }
-      //   }
+      // look right
+      if (outOfBounds(x, y + 1, letter, false)) {
+        addTypeSet(x, y, "r");
+        if (addType(x + 1, y, "r") && addType(x - 1, y, "r")) {
+          dict["r"]++;
+        }
+      }
     }
 
     return Object.values(dict).reduce((c, a) => a + c);
