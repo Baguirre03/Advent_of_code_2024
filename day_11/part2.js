@@ -26,8 +26,7 @@ const dfs = (num, indx) => {
   if (mp.has(k)) return mp.get(k);
   if (evenDigits(num)) {
     let [left, right] = leftRight(num);
-    res += dfs(left, indx + 1);
-    res += dfs(right, indx + 1);
+    res += dfs(left, indx + 1) + dfs(right, indx + 1);
   } else if (num == "0") {
     res += dfs("1", indx + 1);
   } else {

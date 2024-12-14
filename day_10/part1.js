@@ -49,6 +49,5 @@ const solve = (matrix) => {
 
   return heads.reduce((cur, acum) => cur + acum);
 };
-794;
 
 console.log(solve(fileContent));

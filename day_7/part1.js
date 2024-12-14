@@ -4,6 +4,7 @@ const fileContent = fs.readFileSync(filePath, "utf8").split("\n");
 
 const solve = (input) => {
   let res = 0;
+
   for (let line of input) {
     let [sum, ...nums] = line.split(" ");
     sum = +sum.slice(0, sum.indexOf(":"));
