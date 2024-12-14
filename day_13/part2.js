@@ -33,7 +33,7 @@ const solve = (input) => {
 
   return input
     .filter((x) => x)
-    .map((x) => 3 * x[0] + x[1])
+    .map((x) => x[0] * 3 + x[1])
     .reduce((c, a) => c + a);
 };
 
