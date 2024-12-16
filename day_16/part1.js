@@ -35,13 +35,6 @@ const solve = (matrix) => {
 
   pq.queue([0, start[0], start[1], "r"]); // weight, r, c, direction, prev
 
-  const cases = {
-    d: "u",
-    u: "d",
-    r: "l",
-    l: "r",
-  };
-
   while (pq.length) {
     let [w, r, c, curDir] = pq.dequeue();
     addSet(r, c, curDir);
@@ -56,8 +49,6 @@ const solve = (matrix) => {
 
       if (curDir == dir) {
         pq.queue([w + 1, x, y, dir]);
-      } else if (cases[curDir] == dir) {
-        pq.queue([w + 2001, x, y, dir]);
       } else {
         pq.queue([w + 1001, x, y, dir]);
       }
