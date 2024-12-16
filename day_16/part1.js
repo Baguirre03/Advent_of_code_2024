@@ -34,7 +34,6 @@ const solve = (matrix) => {
   const addSet = (x, y, dir) => visited.add(`${x},${y},${dir}`);
 
   pq.queue([0, start[0], start[1], "r"]); // weight, r, c, direction, prev
-  addSet(start[0], start[1], "r");
 
   const cases = {
     d: "u",
@@ -45,14 +44,15 @@ const solve = (matrix) => {
 
   while (pq.length) {
     let [w, r, c, curDir] = pq.dequeue();
+    addSet(r, c, curDir);
+
     if (matrix[r][c] == "E") {
-      return [w, r, c, curDir];
+      return w;
     }
 
     const options = getCords(r, c);
     for (let [x, y, dir] of options) {
       if (checkSet(x, y, dir)) continue;
-      addSet(x, y, dir);
 
       if (curDir == dir) {
         pq.queue([w + 1, x, y, dir]);
