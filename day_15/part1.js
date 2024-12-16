@@ -34,6 +34,7 @@ const solve = (input) => {
     let dir = directions[i];
     let [dy, dx] = options[dir];
     let [newX, newY] = [x + dx, y + dy];
+
     if (outOfbounds(newX, newY)) continue;
 
     if (grid[newY][newX] == ".") {
