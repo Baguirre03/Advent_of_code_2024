@@ -47,7 +47,6 @@ const solve = (input) => {
 
   // out of bounds helper that will stop other functions
   const outOfbounds = (x, y) => grid[y][x] == "#";
-
   // loop through entire directions
   for (let dir of directions) {
     // grab dy and dx
@@ -61,10 +60,7 @@ const solve = (input) => {
       let moved = grabAndMoveBoxes(x, y, newX, newY, dx, dy, dir);
       if (!moved) continue; // if we cant move the boxes continue
     }
-    // awda
     [x, y] = [newX, newY];
-
-    console.log(grid.map((t) => t.join("")));
   }
 
   return getScores(grid); // end of function
@@ -77,17 +73,17 @@ const solve = (input) => {
 
   function grabAndMoveBoxes(x, y, newX, newY, dx, dy, dir) {
     // grab all the boxes
-    if (dir != "^" || dir != "v") {
+    if (dir != "^" && dir != "v") {
       let boxes = leftRightBoxes(newX, newY, dx);
       if (checkLast(boxes, dx, dy)) return false;
       leftRightMove(x, y, boxes, dx, dy);
     } else {
-      let up = dir == "^";
-      let down = !up;
-      let boxes = upDown(newX, newY, dy, up, down);
-      if (checkLast(boxes, dx, dy)) return false;
-      upDownMove(x, y, boxes, dx, dy);
+      let down = dir == "v";
+      let boxes = upDownBoxes(newX, newY, dy);
+      if (!checkLastUpDown(boxes, dy)) return false;
+      upDownMove(boxes, dy, x, y, down);
     }
+
     return true;
   }
 
@@ -118,21 +114,45 @@ const solve = (input) => {
     return cords;
   }
 
-  function upDown(newX, newY, moveY, up, down) {
+  function upDownMove(cords, moveY, x, y, down) {
+    if (!down) cords.sort((a, b) => (a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]));
+    if (down) cords.sort((a, b) => (a[1] == b[1] ? a[0] - b[0] : b[1] - a[1]));
+    cords.forEach((cord) => {
+      let [x, y] = cord;
+      let tmp = grid[y][x];
+      grid[y][x] = ".";
+      grid[y + moveY][x] = tmp;
+    });
+    grid[y + moveY][x] = "@";
+    grid[y][x] = ".";
+  }
+
+  function upDownBoxes(newX, newY, dy) {
     let cords = [];
-    let visited = new Set();
-    let key = (x, y) => `${x},${y}`;
-    if (!up && !down) {
-      while (
-        !outOfbounds(newX, newY) &&
-        (grid[newY][newX] == "]" || grid[newY][newX] == "[")
-      ) {
-        cords.push([newX, newY]);
-        newX += moveX;
+    let q = [];
+
+    const visited = new Set();
+    const inVisit = (x, y) => visited.has(`${x},${y}`);
+    const addVisit = (x, y) => visited.add(`${x},${y}`);
+
+    if (grid[newY][newX] == "]") q.push([newX, newY], [newX - 1, newY]);
+    else if (grid[newY][newX] == "[") q.push([newX, newY], [newX + 1, newY]);
+
+    while (q.length) {
+      let [curX, curY] = q.shift();
+      if (inVisit(curX, curY) || outOfbounds(curX, curY)) continue;
+      addVisit(curX, curY);
+
+      if (grid[curY][curX] == "[" || grid[curY][curX] == "]")
+        cords.push([curX, curY]);
+
+      if (grid[curY + dy][curX] == "[") {
+        q.push([curX, curY + dy], [curX + 1, curY + dy]);
+      } else if (grid[curY + dy][curX] == "]") {
+        q.push([curX, curY + dy], [curX - 1, curY + dy]);
       }
-    } else {
-      //up and down helper
     }
+
     return cords;
   }
 
@@ -141,11 +161,18 @@ const solve = (input) => {
     return outOfbounds(lastBox[0] + moveX, lastBox[1] + moveY);
   }
 
+  function checkLastUpDown(boxes, moveY) {
+    for (let cord of boxes) {
+      if (outOfbounds(cord[0], cord[1] + moveY)) return false;
+    }
+    return true;
+  }
+
   function getScores(grid) {
     let res = 0;
     grid.forEach((row, i) => {
       row.forEach((char, j) => {
-        if (char == "O") {
+        if (char == "[") {
           res += 100 * i + j;
         }
       });
