@@ -23,9 +23,7 @@ const solve = (matrix) => {
   });
 
   const pq = new PriorityQueue({
-    comparator: function (a, b) {
-      return a[0] - b[0];
-    },
+    comparator: (a, b) => a[0] - b[0],
   }); // [weight, r, c]
 
   const visited = new Set();
@@ -34,15 +32,19 @@ const solve = (matrix) => {
   const addSet = (x, y, dir) => visited.add(`${x},${y},${dir}`);
 
   pq.queue([0, start[0], start[1], "r", [[start[0], start[1]]]]); // weight, r, c, direction, prev
+
   let res = [];
+  let smallest = 0;
   while (pq.length) {
     let [w, r, c, curDir, prev] = pq.dequeue();
     addSet(r, c, curDir);
 
-    if (matrix[r][c] == "E") {
-      res.push([w, [...prev]]);
-    }
+    if (smallest != 0 && w > smallest) break;
 
+    if (matrix[r][c] == "E") {
+      smallest = w;
+      res.push([...prev]);
+    }
     const options = getCords(r, c);
     for (let [x, y, dir] of options) {
       if (checkSet(x, y, dir)) continue;
@@ -56,14 +58,12 @@ const solve = (matrix) => {
   }
 
   let finalSet = new Set();
-  let min = res[0][0];
-  for (let [score, arr] of res) {
-    if (score == min) {
-      for (let [x, y] of arr) {
-        finalSet.add([x, y].toString());
-      }
-    }
-  }
+  res.forEach((path) => {
+    path.forEach((x) => {
+      finalSet.add([x[0], x[1]].toString());
+    });
+  });
+
   return finalSet.size;
 
   function getCords(x, y) {
