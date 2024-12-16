@@ -8,12 +8,6 @@ const fileContent = fs
   .split(/\n/)
   .map((x) => x.split(""));
 
-// Start with S
-// reach end tile marked iwth E
-// move forward increasing score by 1 point
-// can rotate clockwise or counterclockwise 90 degrees at a time
-// increases score by 1000
-
 const solve = (matrix) => {
   let start = [0, 0];
   matrix.forEach((row, i) => {
