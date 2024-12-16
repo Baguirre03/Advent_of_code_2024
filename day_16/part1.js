@@ -38,7 +38,7 @@ const solve = (matrix) => {
   while (pq.length) {
     let [w, r, c, curDir] = pq.dequeue();
     if (matrix[r][c] == "E") {
-      return [w + 1, r, c, curDir];
+      return [w, r, c, curDir];
     }
 
     const options = getCords(r, c);
