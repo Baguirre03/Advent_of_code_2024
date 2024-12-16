@@ -30,11 +30,19 @@ const solve = (matrix) => {
 
   const visited = new Set();
   const outOfBounds = (x, y) => matrix[x][y] == "#";
-  const checkSet = (x, y) => visited.has(`${x},${y}`);
-  const addSet = (x, y) => visited.add(`${x},${y}`);
+  const checkSet = (x, y, dir) => visited.has(`${x},${y},${dir}`);
+  const addSet = (x, y, dir) => visited.add(`${x},${y},${dir}`);
 
   pq.queue([0, start[0], start[1], "r"]); // weight, r, c, direction, prev
-  addSet(start[0], start[1]);
+  addSet(start[0], start[1], "r");
+
+  const cases = {
+    d: "u",
+    u: "d",
+    r: "l",
+    l: "r",
+  };
+
   while (pq.length) {
     let [w, r, c, curDir] = pq.dequeue();
     if (matrix[r][c] == "E") {
@@ -43,10 +51,13 @@ const solve = (matrix) => {
 
     const options = getCords(r, c);
     for (let [x, y, dir] of options) {
-      if (checkSet(x, y)) continue;
-      addSet(x, y);
-      if (curDir == "" || curDir == dir) {
+      if (checkSet(x, y, dir)) continue;
+      addSet(x, y, dir);
+
+      if (curDir == dir) {
         pq.queue([w + 1, x, y, dir]);
+      } else if (cases[curDir] == dir) {
+        pq.queue([w + 2001, x, y, dir]);
       } else {
         pq.queue([w + 1001, x, y, dir]);
       }
